@@ -1,0 +1,68 @@
+/* What I want to do:
+input 5 words as strings
+make all strings capitalized
+scramble words randomly
+output all scrambled words; numbered 1-5
+ask which word the user wants to guess (1-5)
+redisplay scrambled word that is being guessed, take input for guess
+if correct, say so and redisplay all the words //correct words are no longer scrambled, bold?
+if incorrect, say so and redisplay all the words //correct words are no longer scrambled, bold?
+if all are correct, display all the words, display "You win!"
+*/
+
+/* How to do what I want to do:
+use loop to put each letter of each word into 5 arrays
+use loop to randomly generate numbers to shuffle letters in the array
+if possible, put back into a single string, if not, display each letter
+
+when (numCorrect == 5), say "You win!" and end program
+
+*/
+import java.util.*;
+import java.util.Scanner;
+
+public class WordScrambleGame
+{
+   public static void main(String[] args)
+   {
+      //Scanner
+      Scanner keyboard = new Scanner(System.in);
+      
+      //Title
+      System.out.println("Welcome to \"Word Scramble!\"");
+      System.out.println("By: Matt Jordan\n");
+      
+      //Intro
+      System.out.println("In this game, you'll should have a friend input 5 different words. These words will be scrambled");
+      System.out.println("and you will have to unscramble them. To choose what word you would like tomake a guess on, input");
+      System.out.println("a number from 1-5. Each time you guess correctly, you will be notified and the scrambled word be");
+      System.out.println("unscrambled. After all 5 words have been unscrambled you win! Good luck!\n");
+      
+      //Prepare Input
+      System.out.println("Now's the time for your friend to input what words he would like you to try and unscramble.");
+      System.out.println("When you are ready to start inputing words, please type 'ready'.\n");
+      String areYouReady = "";
+      do {
+      areYouReady = keyboard.nextLine();
+      } while (!areYouReady.equals("ready"));
+      
+      //Input
+      String answers[] = new String[5];
+      String x[] = {"1st","2nd","3rd","4th","5th"};
+      for (int counter = 0; counter < 5; counter++) {
+         System.out.println("\nInput " + x[counter] + " word:");
+         answers[counter] = keyboard.nextLine();
+      }
+      
+      //add a check to ask if the user made a mistake
+      
+      /*//test answers array
+      System.out.println("");
+      for (int counter = 0; counter < 5; counter++){
+         System.out.println(answers[counter]);
+      }*/
+           
+      
+      
+   }
+}      
