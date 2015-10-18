@@ -1,25 +1,6 @@
-/* What I want to do:
-input 5 words as strings
-make all strings capitalized
-scramble words randomly
-output all scrambled words; numbered 1-5
-ask which word the user wants to guess (1-5)
-redisplay scrambled word that is being guessed, take input for guess
-if correct, say so and redisplay all the words //correct words are no longer scrambled, bold?
-if incorrect, say so and redisplay all the words //correct words are no longer scrambled, bold?
-if all are correct, display all the words, display "You win!"
-*/
-
-/* How to do what I want to do:
-use loop to put each letter of each word into 5 arrays
-use loop to randomly generate numbers to shuffle letters in the array
-if possible, put back into a single string, if not, display each letter
-
-when (numCorrect == 5), say "You win!" and end program
-
-*/
 import java.util.*;
 import java.util.Scanner;
+import java.util.Random;
 
 public class WordScrambleGame
 {
@@ -33,13 +14,14 @@ public class WordScrambleGame
       System.out.println("By: Matt Jordan\n");
       
       //Intro
-      System.out.println("In this game, you'll should have a friend input 5 different words. These words will be scrambled");
-      System.out.println("and you will have to unscramble them. To choose what word you would like tomake a guess on, input");
+      System.out.println("In this game, you'll need a friend to input 5 different words. These words will be scrambled");
+      System.out.println("and you will have to unscramble them. To choose what word you would like to make a guess on, input");
       System.out.println("a number from 1-5. Each time you guess correctly, you will be notified and the scrambled word be");
       System.out.println("unscrambled. After all 5 words have been unscrambled you win! Good luck!\n");
       
-      //Prepare Input
+      //Prepare to input
       System.out.println("Now's the time for your friend to input what words he would like you to try and unscramble.");
+      System.out.println("Each word must be 3 or more letters and cannot have any spaces.");
       System.out.println("When you are ready to start inputing words, please type 'ready'.\n");
       String areYouReady = "";
       do {
@@ -47,22 +29,147 @@ public class WordScrambleGame
       } while (!areYouReady.equals("ready"));
       
       //Input
-      String answers[] = new String[5];
+      String answers[] = {"","","","",""};
       String x[] = {"1st","2nd","3rd","4th","5th"};
+      String space = "";
       for (int counter = 0; counter < 5; counter++) {
-         System.out.println("\nInput " + x[counter] + " word:");
-         answers[counter] = keyboard.nextLine();
+         do {
+            if (answers[counter].length() < 3 && !answers[counter].equals(""))
+               System.out.print("\nThat word is too short! ");
+            if (space.equals(" ")){
+               System.out.println("The word cannot contain spaces!");
+               space = "";
+            }
+            System.out.println("\nInput " + x[counter] + " word:");
+            answers[counter] = keyboard.nextLine();
+            //check for spaces
+            for (int insideCounter = 0; insideCounter < answers[counter].length() && !space.equals(" "); insideCounter++)
+               space = answers[counter].substring(insideCounter,insideCounter+1);
+         } while (answers[counter].length() < 3 || space.equals(" "));
+         answers[counter] = answers[counter].toUpperCase();
       }
       
+      //add a check for hyphen?    
       //add a check to ask if the user made a mistake
       
-      /*//test answers array
+      /*//Test answers array
       System.out.println("");
       for (int counter = 0; counter < 5; counter++){
          System.out.println(answers[counter]);
       }*/
-           
       
+      //Determine longest word length for string declaration
+      int length = answers[0].length();
+      for (int counter = 1; counter < 5; counter++){
+         if (answers[counter].length() > length)
+            length = answers[counter].length();
+      }
       
+      //Declare string array for spliced letters
+      String spliced[][] = new String[5][length];
+      
+      //Splice and input letters into array
+      for (int counter = 0; counter < 5; counter++){
+         for (int insideCounter = 0; insideCounter < answers[counter].length(); insideCounter++){
+            spliced[counter][insideCounter] = answers[counter].substring(insideCounter,insideCounter+1);
+         }
+      }
+      
+      /*//Test word splicing      
+      for (int counter = 0; counter < 5; counter++){
+         for (int insideCounter = 0; insideCounter < answers[counter].length(); insideCounter++){
+            System.out.print(spliced[counter][insideCounter] + " ");
+            if (insideCounter == answers[counter].length() - 1)
+               System.out.println("");
+         }
+      }*/
+      
+      //Random Number Generator
+      Random randomGenerator = new Random();
+      
+      int random;
+      int change;
+      String temp;
+      //Scramble letters in array
+      for (int counter = 0; counter < 5; counter ++){
+         for (int insideCounter = 0; insideCounter < answers[counter].length(); insideCounter++){
+            random = randomGenerator.nextInt(answers[counter].length());
+            change = 0;
+            while (change == 0){
+               if (random == insideCounter){
+                  while (random == insideCounter) {
+                     random = randomGenerator.nextInt(answers[counter].length());
+                  }
+               }  
+               temp = spliced[counter][insideCounter];
+               spliced[counter][insideCounter] = spliced[counter][random];
+               spliced[counter][random] = temp;
+               change = 1;
+            }
+         }
+      }
+      
+      /*//Test word splicing after randomization     
+      for (int counter = 0; counter < 5; counter++){
+         for (int insideCounter = 0; insideCounter < answers[counter].length(); insideCounter++){
+            System.out.print(spliced[counter][insideCounter] + " ");
+            if (insideCounter == answers[counter].length() - 1)
+               System.out.println("");
+         }
+      }*/
+      
+      //Declare scrambled array
+      String scrambled[] = new String[5];
+      
+      //Store spliced[] into strings inside scrambled[]
+      for (int counter = 0; counter < 5; counter++){
+         scrambled[counter] = "";
+         for (int insideCounter = 0; insideCounter < answers[counter].length(); insideCounter++){
+            scrambled[counter] = scrambled[counter] + spliced[counter][insideCounter];
+         }
+      }
+        
+      /*//Test scrambled array
+      for (int counter = 0; counter < 5; counter++){
+         System.out.println(scrambled[counter]);
+      }*/
+      
+      System.out.println("\nAlright, time to guess! Remember, insert a number from 1-5 to choose which word you'd like to guess."); 
+      
+      int numGuess;
+      int firstRun = 1;
+      String guess;
+      //Output Scrambled
+      while (!Arrays.equals(scrambled,answers)){ //while arrays 'scrambled' and 'answers' are not equal
+         for (int counter = 0; counter < 5; counter++){
+            System.out.println("\n" + (counter+1) + ". " + scrambled[counter]);
+         }
+         numGuess = 0;
+         firstRun = 1;
+         while (numGuess < 1 || numGuess > 5){
+            if ((numGuess < 1 || numGuess > 5) && firstRun == 0)
+               System.out.println("There's not a number " + numGuess + " to guess! Try again.");
+            System.out.print("\nGuess number: ");
+            numGuess = keyboard.nextInt();
+            firstRun = 0;
+         }
+         System.out.print("Guess: ");
+         guess = keyboard.next().toUpperCase();
+         if (guess.equals(answers[numGuess-1])){
+            System.out.println("Correct!");
+            scrambled[numGuess-1] = guess;
+         }
+         else
+            System.out.println("Incorrect! Try again.");   
+      }
+      
+      //add check to see if numGuess was already guessed correctly
+      
+      //Redisplay all words unscrambled for win
+      for (int counter = 0; counter < 5; counter++){
+         System.out.println("\n" + (counter+1) + ". " + scrambled[counter]);
+      }
+
+      System.out.print("\nCongratulations! You've guess all the words correctly! You win!");
    }
-}      
+}
