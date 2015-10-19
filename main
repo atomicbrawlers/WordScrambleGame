@@ -170,6 +170,6 @@ public class WordScrambleGame
          System.out.println("\n" + (counter+1) + ". " + scrambled[counter]);
       }
 
-      System.out.print("\nCongratulations! You've guess all the words correctly! You win!");
+      System.out.print("\nCongratulations! You've guessed all the words correctly! You win!");
    }
 }
