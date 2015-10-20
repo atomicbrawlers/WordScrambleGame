@@ -25,7 +25,7 @@ public class WordScrambleGame
       System.out.println("When you are ready to start inputing words, please type 'ready'.\n");
       String areYouReady = "";
       do {
-      areYouReady = keyboard.nextLine();
+      areYouReady = keyboard.nextLine().toLowerCase();
       } while (!areYouReady.equals("ready"));
       
       //Input
